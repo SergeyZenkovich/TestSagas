@@ -8,7 +8,7 @@ const App: React.FC  = () => {
   const [value, setValue] = useState([1, 2]);
   const setAdd = () => {
     setValue([...value, value[value.length - 1] + 1]);
-    dispatch({type: 'CLICK'});
+    dispatch({type: 'CLICK2'});
   }
   const dispatch = useDispatch();
   return (
