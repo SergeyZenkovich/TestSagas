@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import { useDispatch } from 'react-redux';
-import { FilterComponent } from './componetns/FilterComponent';
-import { Posts } from './componetns/Posts';
+import { Route, Routes } from 'react-router-dom';
+import { MainPage } from './Pages/MainPage';
+
 
 const App: React.FC  = () => {
-  const [personIds, setPersonsIds] = useState<number[]>([]);
-  const dispatch = useDispatch();
   return (
     <div className="App">
-    <FilterComponent personIds={personIds} setPersonsIds={setPersonsIds}/>
-    <Posts personIds={personIds}/>
+      <Routes>
+        <Route path="/" element={<MainPage />}/>
+      </Routes>
     </div>
   );
 }

@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Comment } from './Comment';
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
 
 type Props = {
     postId: number;
 }
 
-type CommentType = {
-    postId: number;
-    id: number;
-    name: string;
-    email: string;
-    body: string;
-}
-
 export const Comments: React.FC<Props> = ({ postId }) => {
     const [postComments, setPostComments] = useState<CommentType[]>([]);
-
 
     useEffect(() => {
         const getPosts = async () => {
