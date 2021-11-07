@@ -9,7 +9,7 @@ export const getAllUsers = async (): Promise<UserType[]> => {
     return result.data;
 };
 export const getPosts = async (queryString: string): Promise<PostType[]> => {
-    const result = await axiosInstance.get(`posts?${queryString}`);
+    const result = await axiosInstance.get(`posts${queryString}`);
     return result.data;
 };
 export const getComments = async (postNumber: number): Promise<CommentType[]> => {

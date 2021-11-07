@@ -1,48 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Post } from './Post';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { loadPostsAction, startFetchPostsDataAction } from '../redux/reducers/posts/postActions';
+import { createQueryFromArray } from '../utils/createQuery';
 
 type Props = {
     personIds: number[];
 }
 
-const createEndofRequest = (array: number[]): string => {
-    return array.join('&userId=');
-}
-
 export const Posts: React.FC<Props> = ({ personIds }) => {
-
-    const [showedPosts, setShowedPosts] = useState<PostType[]>([]);
-    const [startFetching, setStartFetching] = useState<boolean>(false);
-
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const {posts, isPostsLoading} = useSelector((state:RootState) => state.posts);
 
     useEffect(() => {
         const getPosts = async () => {
-            setStartFetching(true);
-            const filterString = `?userId=${createEndofRequest(personIds)}`
+            const filterString = `?userId=${createQueryFromArray(personIds)}`
             navigate(filterString);
-            const posts = await (await fetch(`https://jsonplaceholder.typicode.com/posts?userId=${createEndofRequest(personIds)}`)).json();
-            setShowedPosts(posts);
-            setStartFetching(false);
+            dispatch(startFetchPostsDataAction(filterString));
         }
         if (personIds.length > 0) {
             getPosts();
         } else {
-            setShowedPosts([]);
+            dispatch(loadPostsAction([]));
         }
     }, [personIds]);
 
     return (
         <div style={{display: 'flex', justifyContent: 'center' }}>
-            {startFetching ?
+            {isPostsLoading ?
                 <Box sx={{ display: 'flex' }}>
                     <CircularProgress />
                 </Box> :
                 <div>
-                    {showedPosts.map((el: PostType) => <Post key={el.id} title={el.title} body={el.body} postId={el.id}/>)}
+                    {posts.map((el: PostType) => <Post key={el.id} title={el.title} body={el.body} postId={el.id}/>)}
                 </div>
             }
 

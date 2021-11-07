@@ -9,10 +9,10 @@ export const usersReducer = (state: usersStateType = initialState, action: users
 
     switch(action.type){
         case userActionsEnums.LOAD_USERS: {
-            return {...state, users: action.payload}
+            return {...state, users: action.payload, isLoadingUsers: false}
         }
-        case userActionsEnums.IS_LOADING_USERS: {
-            return {...state, isLoadingUsers: !state.isLoadingUsers}
+        case userActionsEnums.START_LOADING_USERS: {
+            return {...state, isLoadingUsers: true}
         }
         default:
             return state

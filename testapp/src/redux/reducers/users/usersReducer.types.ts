@@ -1,17 +1,17 @@
 export enum userActionsEnums {
     LOAD_USERS = 'LOAD-USERS',
-    IS_LOADING_USERS = 'IS-LOADING-USERS',
+    START_LOADING_USERS = 'START-LOADING-USERS',
 }
 
-export type loadUsersAction = {
+export type loadUsersActionType = {
     type: userActionsEnums.LOAD_USERS,
     payload: UserType[]
 }
-export type isLoadingUsersAction = {
-    type: userActionsEnums.IS_LOADING_USERS,
+export type startLoadingUsersActionType = {
+    type: userActionsEnums.START_LOADING_USERS,
 }
 
-export type usersActions = loadUsersAction | isLoadingUsersAction
+export type usersActions = loadUsersActionType | startLoadingUsersActionType;
 
 export type usersStateType =  {
     users: UserType[],

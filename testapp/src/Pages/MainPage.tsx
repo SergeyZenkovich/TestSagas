@@ -2,31 +2,47 @@ import React, { useEffect, useState } from 'react';
 import { FilterComponent } from '../componetns/FilterComponent';
 import { Posts } from '../componetns/Posts';
 import { useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { startLoadingUsersAction } from '../redux/reducers/users/usersActions';
+import { Box } from '@mui/system';
+import { CircularProgress } from '@mui/material';
 
 
-export const MainPage: React.FC  = () => {
-  const [allUsers, setAllUsers] = useState<UserType[]>([]);
+export const MainPage: React.FC = () => {
   const [personName, setPersonName] = useState<string[]>([]);
-  const [personIds, setPersonsIds] = useState<number[]>([]); 
+  const [personIds, setPersonsIds] = useState<number[]>([]);
 
   const [searchParams] = useSearchParams();
+  const dispatch = useDispatch();
+
+  const {users, isLoadingUsers} = useSelector((state: RootState) => state.users);
 
   useEffect(() => {
     const getUsers = async () => {
-      const usersFromURL = searchParams.getAll('userId').map((el: string)=> Number(el));
-      const users = await (await fetch('https://jsonplaceholder.typicode.com/users')).json();
-      const choosedUsers = users.filter((el: UserType) => usersFromURL.includes(el.id)).map((el: UserType) => el.name);
-      setAllUsers(users);
-      setPersonsIds(usersFromURL)
-      setPersonName(choosedUsers);
+      dispatch(startLoadingUsersAction());
     }
     getUsers();
   }, []);
 
+  useEffect(() => {
+    const usersFromURL = searchParams.getAll('userId').map((el: string) => Number(el));
+    const choosedUsers = users.filter((el: UserType) => usersFromURL.includes(el.id)).map((el: UserType) => el.name);
+    setPersonsIds(usersFromURL)
+    setPersonName(choosedUsers);
+  }, [users])
+
   return (
-    <>
-    <FilterComponent personIds={personIds} setPersonsIds={setPersonsIds} personName={personName} setPersonName={setPersonName} allUsers={allUsers}/>
-    <Posts personIds={personIds} />
+    <>{isLoadingUsers ?
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box> :
+      <div>
+        <FilterComponent personIds={personIds} setPersonsIds={setPersonsIds} personName={personName} setPersonName={setPersonName} allUsers={users} />
+        <Posts personIds={personIds} />
+      </div>
+    }
+
     </>
   );
 }

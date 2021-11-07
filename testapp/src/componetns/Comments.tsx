@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { CircularProgress } from '@mui/material';
+import { Box } from '@mui/system';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { startFetchCommentsDataAction } from '../redux/reducers/posts/postActions';
+import { RootState } from '../redux/store';
 import { Comment } from './Comment';
 
 type Props = {
@@ -6,12 +11,12 @@ type Props = {
 }
 
 export const Comments: React.FC<Props> = ({ postId }) => {
-    const [postComments, setPostComments] = useState<CommentType[]>([]);
+    const dispatch = useDispatch();
+    const { commetns, isCommentsLoading } = useSelector((state: RootState) => state.posts);
 
     useEffect(() => {
         const getPosts = async () => {
-            const posts = await (await fetch(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)).json();
-            setPostComments(posts);
+            dispatch(startFetchCommentsDataAction(postId))
         }
         getPosts();
     }, []);
@@ -19,9 +24,15 @@ export const Comments: React.FC<Props> = ({ postId }) => {
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div>
-                {postComments.map((el: CommentType) => <Comment name={el.name} email={el.email}/>)}
-            </div>
+            {isCommentsLoading ?
+                <Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                </Box> :
+                <div>
+                    {commetns.map((el: CommentType) => <Comment name={el.name} email={el.email} />)}
+                </div>
+            }
+
         </div>
     );
 }

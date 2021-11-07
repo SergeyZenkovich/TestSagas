@@ -1,25 +1,32 @@
 export enum postsActionsEnums {
     LOAD_POSTS = 'LOAD-POSTS',
-    IS_POSTS_LOADING = 'IS-POSTS-LOADING',
+    START_POSTS_LOADING = 'START-POSTS-LOADING',
     LOAD_COMMENTS = 'LOAD-COMMENTS',
+    START_COMMENTS_LOADING = 'START-COMMENTS-LOADING',
 }
 
-export type loadPostsAction = {
+export type loadPostsActionType = {
     type: postsActionsEnums.LOAD_POSTS,
     payload: PostType[]
 }
-export type loadPostsCommentsAction = {
+export type loadPostsCommentsActionType = {
     type: postsActionsEnums.LOAD_COMMENTS,
     payload: CommentType[]
 }
-export type isPostsLoadingAction = {
-    type: postsActionsEnums.IS_POSTS_LOADING,
+export type startFetchPostsDataActionType = {
+    type: postsActionsEnums.START_POSTS_LOADING,
+    payload: string;
+}
+export type startFetchCommentsDataActionType = {
+    type: postsActionsEnums.START_COMMENTS_LOADING,
+    payload: number
 }
 
-export type postsActions = loadPostsAction | isPostsLoadingAction | loadPostsCommentsAction;
+export type postsActions = loadPostsActionType | loadPostsCommentsActionType | startFetchPostsDataActionType | startFetchCommentsDataActionType;
 
 export type postsStateType =  {
     posts: PostType[],
     commetns: CommentType[],
     isPostsLoading: boolean,
+    isCommentsLoading: boolean,
  }
